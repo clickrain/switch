@@ -104,14 +104,14 @@ class Switch_ft extends EE_Fieldtype {
 	 */
 	function display_field($data)
 	{
-		return $this->_display($data, 'field_id_' . $this->field_id, 'field_id_' . $this->field_id, $this->settings);
+		return $this->_display($data, $this->field_name, $this->field_name, $this->settings);
 	}
 
 	function grid_display_field($data) {
 		$fieldid = $this->settings['grid_field_id'];
 		$rowid = isset($this->settings['grid_row_id']) ? $this->settings['grid_row_id'] : 'new';
 		$id = "switch_{$fieldid}_{$rowid}";
-		return $this->_display($data, 'field_id_' . $this->field_id, $id, $this->settings);
+		return $this->_display($data, $this->field_name, $id, $this->settings);
 	}
 
 	function display_cell($data)
@@ -159,7 +159,12 @@ EOF;
 	 */
 	function save($data)
 	{
-		return $this->EE->input->post('field_id_' . $this->field_id);
+		return $data;
+	}
+
+	function grid_save($data)
+	{
+		return $data;
 	}
 
 	/**
