@@ -1,0 +1,74 @@
+.switch {
+	position: relative;
+	background: #bbb;
+	max-width: 18.75em; /* 300/16 */
+	border-radius: 0.31em; /* 5/16 */
+	overflow: hidden;
+	padding: 0.13em; /* 2/16 */
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	box-shadow: inset 0 0.06em 0.19em rgba(180, 180, 180, 0.2); /* 1/16, 3/16 */
+}
+.switch input {
+	display: none;
+}
+.switch label {
+	text-align: center;
+	cursor: pointer;
+	overflow: hidden;
+	white-space: pre;
+	text-overflow: ellipsis;
+	padding: 0.13em 0.38em; /* 2/16, 6/16 */
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+}
+.switch label.left {
+	float: left;
+	position: relative;
+	z-index: 2;
+	width: 50%;
+}
+.switch label.right {
+	float: left;
+	position: relative;
+	z-index: 2;
+	width: 50%;
+}
+.switch .shuttle {
+	position: absolute;
+	z-index: 1;
+	top: 0;
+	bottom: 0;
+	left: 0;
+	width: 50%;
+
+	-webkit-transition: 0.2s -webkit-transform;
+	-moz-transition: 0.2s -moz-transform;
+	transition: 0.2s transform;
+}
+.switch .shuttle span {
+	display: block;
+	position: absolute;
+	left: 0.13em; /* 2/16 */
+	right: 0.13em; /* 2/16 */
+	top: 0.13em; /* 2/16 */
+	bottom: 0.13em; /* 2/16 */
+	border-radius: 0.19em; /* 3/16 */;
+	background-color: #34ef15;
+
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%,color-stop(0, rgb(88, 220, 85)),color-stop(1, rgb(40, 177, 37)));
+	/* Android 2.3 */
+	background-image: -webkit-linear-gradient(top,rgb(88, 220, 85) 0%,rgb(40, 177, 37) 100%);
+	/* IE10+ */
+	background-image: linear-gradient(to bottom,rgb(88, 220, 85) 0%,rgb(40, 177, 37) 100%);
+	background-image: -ms-linear-gradient(top,rgb(88, 220, 85) 0%,rgb(40, 177, 37) 100%);
+}
+
+.switch input.right:checked ~ .shuttle {
+	-webkit-transform: translate(100%, 0);
+	-moz-transform: translate(100%, 0);
+	-ms-transform: translate(100%, 0);
+	transform: translate(100%, 0);
+}
