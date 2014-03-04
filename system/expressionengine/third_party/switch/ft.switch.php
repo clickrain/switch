@@ -123,31 +123,55 @@ class Switch_ft extends EE_Fieldtype {
 		$this->_include_theme_js('javascript/switch.js');
 		$this->_include_theme_css('css/switch.css');
 
-		$leftid = $id . '-on';
-		$rightid = $id . '-off';
 		$leftlabel = isset($settings['leftlabel']) ? $settings['leftlabel'] : "ON";
 		$leftvalue = isset($settings['leftvalue']) ? $settings['leftvalue'] : "y";
 		$rightlabel = isset($settings['rightlabel']) ? $settings['rightlabel'] : "OFF";
 		$rightvalue = isset($settings['rightvalue']) ? $settings['rightvalue'] : "n";
 
-		$leftchecked = '';
-		$rightchecked = '';
+		$leftchecked = FALSE;
+		$rightchecked = FALSE;
 		if ($data == $leftvalue) {
-			$leftchecked = 'checked';
+			$leftchecked = TRUE;
 		}
-		if ($data == $rightvalue && $leftchecked == '') {
-			$rightchecked = 'checked';
+		if ($data == $rightvalue && $leftchecked == FALSE) {
+			$rightchecked = TRUE;
 		}
 
-		return <<<EOF
-<div class="switch">
-	<input type="radio" name="{$name}" id="{$leftid}" class="left" value="{$leftvalue}" {$leftchecked}>
-	<label for="{$leftid}" class="left">{$leftlabel}</label>
-	<input type="radio" name="{$name}" id="{$rightid}" class="right" value="{$rightvalue}" {$rightchecked}>
-	<label for="{$rightid}" class="right">{$rightlabel}</label>
-	<span class="shuttle"><span></span></span>
-</div>
-EOF;
+		if ($leftchecked == FALSE && $rightchecked == FALSE) {
+			$leftchecked = TRUE;
+		}
+
+		$options = array();
+		$options[] = array(
+			'id' => $id . '-1',
+			'label' => $leftlabel,
+			'value' => $leftvalue,
+			'checked' => $leftchecked
+		);
+		$options[] = array(
+			'id' => $id . '-2',
+			'label' => $rightlabel,
+			'value' => $rightvalue,
+			'checked' => $rightchecked
+		);
+
+		$ret = '<div class="switch" data-optioncount="' . count($options) . '">';
+
+		$i = 0;
+		foreach ($options as $option) {
+			$i++;
+			$ret .= "<input type=\"radio\" name=\"{$name}\" id=\"{$option['id']}\" data-option=\"{$i}\" value=\"{$option['value']}\"";
+			if ($option['checked']) {
+				$ret .= " checked";
+			}
+			$ret .= ">";
+			$ret .= "<label for=\"{$option['id']}\">{$option['label']}</label>";
+		}
+
+		$ret .= '<span class="shuttle"><span></span></span>';
+		$ret .= '</div>';
+
+		return $ret;
 	}
 
 	/**

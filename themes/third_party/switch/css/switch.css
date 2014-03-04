@@ -23,18 +23,11 @@
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
-}
-.switch label.left {
+
 	float: left;
-	position: relative;
-	z-index: 2;
 	width: 50%;
-}
-.switch label.right {
-	float: left;
-	position: relative;
 	z-index: 2;
-	width: 50%;
+	position: relative;
 }
 .switch .shuttle {
 	position: absolute;
@@ -48,6 +41,12 @@
 	-moz-transition: 0.2s -moz-transform;
 	transition: 0.2s transform;
 }
+.switch[data-optioncount="3"] .shuttle, .switch[data-optioncount="3"] label { width: 33.3333%; }
+.switch[data-optioncount="4"] .shuttle, .switch[data-optioncount="4"] label { width: 25%; }
+.switch[data-optioncount="5"] .shuttle, .switch[data-optioncount="5"] label { width: 20%; }
+.switch[data-optioncount="6"] .shuttle, .switch[data-optioncount="6"] label { width: 16.6667%; }
+.switch[data-optioncount="7"] .shuttle, .switch[data-optioncount="7"] label { width: 14.2857%; }
+.switch[data-optioncount="8"] .shuttle, .switch[data-optioncount="8"] label { width: 12.5%; }
 .switch .shuttle span {
 	display: block;
 	position: absolute;
@@ -66,9 +65,45 @@
 	background-image: -ms-linear-gradient(top,rgb(88, 220, 85) 0%,rgb(40, 177, 37) 100%);
 }
 
-.switch input.right:checked ~ .shuttle {
+.switch [data-option="2"]:checked ~ .shuttle {
 	-webkit-transform: translate(100%, 0);
 	-moz-transform: translate(100%, 0);
 	-ms-transform: translate(100%, 0);
 	transform: translate(100%, 0);
+}
+.switch [data-option="3"]:checked ~ .shuttle {
+	-webkit-transform: translate(200%, 0);
+	-moz-transform: translate(200%, 0);
+	-ms-transform: translate(200%, 0);
+	transform: translate(200%, 0);
+}
+.switch [data-option="4"]:checked ~ .shuttle {
+	-webkit-transform: translate(300%, 0);
+	-moz-transform: translate(300%, 0);
+	-ms-transform: translate(300%, 0);
+	transform: translate(300%, 0);
+}
+.switch [data-option="5"]:checked ~ .shuttle {
+	-webkit-transform: translate(400%, 0);
+	-moz-transform: translate(400%, 0);
+	-ms-transform: translate(400%, 0);
+	transform: translate(400%, 0);
+}
+.switch [data-option="6"]:checked ~ .shuttle {
+	-webkit-transform: translate(500%, 0);
+	-moz-transform: translate(500%, 0);
+	-ms-transform: translate(500%, 0);
+	transform: translate(500%, 0);
+}
+.switch [data-option="7"]:checked ~ .shuttle {
+	-webkit-transform: translate(600%, 0);
+	-moz-transform: translate(600%, 0);
+	-ms-transform: translate(600%, 0);
+	transform: translate(600%, 0);
+}
+.switch [data-option="8"]:checked ~ .shuttle {
+	-webkit-transform: translate(700%, 0);
+	-moz-transform: translate(700%, 0);
+	-ms-transform: translate(700%, 0);
+	transform: translate(700%, 0);
 }
