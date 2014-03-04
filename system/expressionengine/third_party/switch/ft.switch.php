@@ -93,6 +93,28 @@ class Switch_ft extends EE_Fieldtype {
 		);
 	}
 
+	function grid_display_settings($data) {
+		$leftlabel = isset($data['leftlabel']) ? $data['leftlabel'] : "ON";
+		$leftvalue = isset($data['leftvalue']) ? $data['leftvalue'] : "y";
+		$rightlabel = isset($data['rightlabel']) ? $data['rightlabel'] : "OFF";
+		$rightvalue = isset($data['rightvalue']) ? $data['rightvalue'] : "n";
+		$default = isset($data['default']) ? $data['default'] : 'left';
+
+		return array(
+			$this->grid_settings_row('Left Label', form_input(array('name' => 'leftlabel', 'value' => $leftlabel))),
+			$this->grid_settings_row('Left Value', form_input(array('name' => 'leftvalue', 'value' => $leftvalue))),
+			$this->grid_settings_row('Right Label', form_input(array('name' => 'rightlabel', 'value' => $rightlabel))),
+			$this->grid_settings_row('Right Value', form_input(array('name' => 'rightvalue', 'value' => $rightvalue))),
+			$this->grid_dropdown_row('Default', 'default', array('left' => 'Left', 'right' => 'Right'), $default)
+		);
+	}
+
+	function grid_save_settings($data)
+	{
+		return $data;
+	}
+
+
 
 	/**
 	 * Display Field on Publish
