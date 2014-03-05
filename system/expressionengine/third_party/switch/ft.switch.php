@@ -67,18 +67,29 @@ class Switch_ft extends EE_Fieldtype {
 		return $default;
 	}
 
-	function display_settings($data) {
+	function display_settings($data)
+	{
+		$colors = array(
+			'blue' => 'Blue',
+			'green' => 'Green',
+			'yellow' => 'Yellow',
+			'red' => 'Red'
+		);
 
 		$leftlabel = isset($data['leftlabel']) ? $data['leftlabel'] : "ON";
 		$leftvalue = isset($data['leftvalue']) ? $data['leftvalue'] : "y";
+		$leftcolor = isset($data['leftcolor']) ? $data['leftcolor'] : "blue";
 		$rightlabel = isset($data['rightlabel']) ? $data['rightlabel'] : "OFF";
 		$rightvalue = isset($data['rightvalue']) ? $data['rightvalue'] : "n";
+		$rightcolor = isset($data['rightcolor']) ? $data['rightcolor'] : "blue";
 		$default = isset($data['default']) ? $data['default'] : 'left';
 
 		$this->EE->table->add_row('Left Label', form_input(array('name' => 'leftlabel', 'value' => $leftlabel)));
 		$this->EE->table->add_row('Left Value', form_input(array('name' => 'leftvalue', 'value' => $leftvalue)));
+		$this->EE->table->add_row('Left Color', form_dropdown('leftcolor', $colors, $leftcolor));
 		$this->EE->table->add_row('Right Label', form_input(array('name' => 'rightlabel', 'value' => $rightlabel)));
 		$this->EE->table->add_row('Right Value', form_input(array('name' => 'rightvalue', 'value' => $rightvalue)));
+		$this->EE->table->add_row('Right Color', form_dropdown('rightcolor', $colors, $rightcolor));
 		$this->EE->table->add_row('Default', form_dropdown('default', array('left' => 'Left', 'right' => 'Right'), $default));
 	}
 
@@ -87,24 +98,37 @@ class Switch_ft extends EE_Fieldtype {
 		return array(
 			'leftlabel'  => ee()->input->post('leftlabel'),
 			'leftvalue'  => ee()->input->post('leftvalue'),
+			'leftcolor'  => ee()->input->post('leftcolor'),
 			'rightlabel' => ee()->input->post('rightlabel'),
 			'rightvalue' => ee()->input->post('rightvalue'),
+			'rightcolor' => ee()->input->post('rightcolor'),
 			'default'    => ee()->input->post('default')
 		);
 	}
 
 	function grid_display_settings($data) {
+		$colors = array(
+			'blue' => 'Blue',
+			'green' => 'Green',
+			'yellow' => 'Yellow',
+			'red' => 'Red'
+		);
+
 		$leftlabel = isset($data['leftlabel']) ? $data['leftlabel'] : "ON";
 		$leftvalue = isset($data['leftvalue']) ? $data['leftvalue'] : "y";
+		$leftcolor = isset($data['leftcolor']) ? $data['leftcolor'] : "blue";
 		$rightlabel = isset($data['rightlabel']) ? $data['rightlabel'] : "OFF";
 		$rightvalue = isset($data['rightvalue']) ? $data['rightvalue'] : "n";
+		$rightcolor = isset($data['rightcolor']) ? $data['rightcolor'] : "blue";
 		$default = isset($data['default']) ? $data['default'] : 'left';
 
 		return array(
 			$this->grid_settings_row('Left Label', form_input(array('name' => 'leftlabel', 'value' => $leftlabel))),
 			$this->grid_settings_row('Left Value', form_input(array('name' => 'leftvalue', 'value' => $leftvalue))),
+			$this->grid_dropdown_row('Left Color', 'leftcolor', $colors, $leftcolor),
 			$this->grid_settings_row('Right Label', form_input(array('name' => 'rightlabel', 'value' => $rightlabel))),
 			$this->grid_settings_row('Right Value', form_input(array('name' => 'rightvalue', 'value' => $rightvalue))),
+			$this->grid_dropdown_row('Right Color', 'rightcolor', $colors, $rightcolor),
 			$this->grid_dropdown_row('Default', 'default', array('left' => 'Left', 'right' => 'Right'), $default)
 		);
 	}
@@ -147,8 +171,10 @@ class Switch_ft extends EE_Fieldtype {
 
 		$leftlabel = isset($settings['leftlabel']) ? $settings['leftlabel'] : "ON";
 		$leftvalue = isset($settings['leftvalue']) ? $settings['leftvalue'] : "y";
+		$leftcolor = isset($settings['leftcolor']) ? $settings['leftcolor'] : "blue";
 		$rightlabel = isset($settings['rightlabel']) ? $settings['rightlabel'] : "OFF";
 		$rightvalue = isset($settings['rightvalue']) ? $settings['rightvalue'] : "n";
+		$rightcolor = isset($settings['rightcolor']) ? $settings['rightcolor'] : "blue";
 
 		$leftchecked = FALSE;
 		$rightchecked = FALSE;
@@ -168,21 +194,23 @@ class Switch_ft extends EE_Fieldtype {
 			'id' => $id . '-1',
 			'label' => $leftlabel,
 			'value' => $leftvalue,
-			'checked' => $leftchecked
+			'checked' => $leftchecked,
+			'color' => $leftcolor
 		);
 		$options[] = array(
 			'id' => $id . '-2',
 			'label' => $rightlabel,
 			'value' => $rightvalue,
-			'checked' => $rightchecked
+			'checked' => $rightchecked,
+			'color' => $rightcolor
 		);
 
-		$ret = '<div class="switch" data-optioncount="' . count($options) . '">';
+		$ret = '<div class="switch" data-options="' . count($options) . '">';
 
 		$i = 0;
 		foreach ($options as $option) {
 			$i++;
-			$ret .= "<input type=\"radio\" name=\"{$name}\" id=\"{$option['id']}\" data-option=\"{$i}\" value=\"{$option['value']}\"";
+			$ret .= "<input type=\"radio\" name=\"{$name}\" id=\"{$option['id']}\" data-position=\"{$i}\" data-color=\"{$option['color']}\" value=\"{$option['value']}\"";
 			if ($option['checked']) {
 				$ret .= " checked";
 			}
