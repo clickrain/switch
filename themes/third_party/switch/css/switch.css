@@ -55,14 +55,18 @@
 	top: 0.13em; /* 2/16 */
 	bottom: 0.13em; /* 2/16 */
 	border-radius: 0.19em; /* 3/16 */;
-	background-color: #34ef15;
+	background-color: #28b125;
 
-	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%,color-stop(0, rgb(88, 220, 85)),color-stop(1, rgb(40, 177, 37)));
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%,color-stop(0, rgba(255, 255, 255, 0.2)),color-stop(0.5, rgba(255, 255, 255, 0)),color-stop(0.5, rgba(0, 0, 0, 0)),color-stop(1, rgba(0, 0, 0, 0.2)));
 	/* Android 2.3 */
-	background-image: -webkit-linear-gradient(top,rgb(88, 220, 85) 0%,rgb(40, 177, 37) 100%);
+	background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.2) 100%);
 	/* IE10+ */
-	background-image: linear-gradient(to bottom,rgb(88, 220, 85) 0%,rgb(40, 177, 37) 100%);
-	background-image: -ms-linear-gradient(top,rgb(88, 220, 85) 0%,rgb(40, 177, 37) 100%);
+	background-image: linear-gradient(to bottom, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.2) 100%);
+	background-image: -ms-linear-gradient(top, rgba(255, 255, 255, 0.2) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0) 50%, rgba(0, 0, 0, 0.2) 100%);
+
+	-webkit-transition: 0.2s background-color;
+	-moz-transition: 0.2s background-color;
+	transition: 0.2s background-color;
 }
 
 .switch [data-option="2"]:checked ~ .shuttle {
