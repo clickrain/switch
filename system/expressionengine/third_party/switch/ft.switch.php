@@ -156,7 +156,8 @@ class Switch_ft extends EE_Fieldtype {
 	function grid_display_field($data) {
 		$fieldid = $this->settings['grid_field_id'];
 		$rowid = isset($this->settings['grid_row_id']) ? $this->settings['grid_row_id'] : 'new';
-		$id = "switch_{$fieldid}_{$rowid}";
+		$colid = $this->settings['col_id'];
+		$id = "switch_{$fieldid}_{$rowid}_{$colid}";
 		return $this->_display($data, $this->field_name, $id, $this->settings);
 	}
 
