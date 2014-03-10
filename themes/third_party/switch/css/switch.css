@@ -24,10 +24,17 @@
 	-moz-box-sizing: border-box;
 	box-sizing: border-box;
 
+	-webkit-transition: 0.2s color;
+	-moz-transition: 0.2s color;
+	transition: 0.2s color;
+
 	float: left;
 	width: 50%;
 	z-index: 2;
 	position: relative;
+}
+.switch input:checked + label {
+	color: white;
 }
 .switch .shuttle {
 	position: absolute;
@@ -55,7 +62,7 @@
 	top: 0.13em; /* 2/16 */
 	bottom: 0.13em; /* 2/16 */
 	border-radius: 0.19em; /* 3/16 */;
-	background-color: #0055bd;
+	background-color: #6c899b;
 
 	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%,color-stop(0, rgba(255, 255, 255, 0.2)),color-stop(0.5, rgba(255, 255, 255, 0)),color-stop(0.5, rgba(0, 0, 0, 0)),color-stop(1, rgba(0, 0, 0, 0.2)));
 	/* Android 2.3 */
