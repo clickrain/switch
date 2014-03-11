@@ -1,7 +1,7 @@
 # Switch
 
-Switch is a Grid- and Matrix-compatible Field Type add-on for ExpressionEngine
-that enables easy either-or switches.
+Switch is a Grid-compatible Field Type add-on for ExpressionEngine that
+enables easy either-or switches.
 
 ## A note about support
 

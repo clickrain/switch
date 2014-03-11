@@ -259,14 +259,6 @@ class Switch_ft extends EE_Fieldtype {
 	}
 
 	/**
-	 * Display the Switch in a matrix on the Publish form.
-	 */
-	function display_cell($data)
-	{
-		return $this->_display($data, $this->cell_name, $this->cell_name, $this->settings);
-	}
-
-	/**
 	 * Display the Switch. This is extracted out because the bulk of
 	 * displaying the Switch is common between the various sources.
 	 */
