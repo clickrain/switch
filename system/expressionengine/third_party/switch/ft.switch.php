@@ -7,6 +7,15 @@ class Switch_ft extends EE_Fieldtype {
 		'version'	=> '1.0.0-alpha'
 	);
 
+	/**
+	 * The maximum number of options that any given Switch may have. This is
+	 * essentially an arbitrary number, but we need to be reasonable. A Switch
+	 * that has 15 options should probably just be a select box. To change
+	 * this to a higher number, it is also necessary to add CSS to support
+	 * more options.
+	 */
+	const MAXIMUM_OPTIONS = 8;
+
 	function __construct()
 	{
 		parent::__construct();
@@ -20,6 +29,15 @@ class Switch_ft extends EE_Fieldtype {
 		if (!isset($this->cache['includes'])) {
 			$this->cache['includes'] = array();
 		}
+
+		// Define the default list of colors.
+		$this->colors = array(
+			'default' => 'Default',
+			'green' => 'Green',
+			'yellow' => 'Yellow',
+			'red' => 'Red',
+			'blue' => 'Blue'
+		);
 	}
 
 	/**
@@ -30,6 +48,9 @@ class Switch_ft extends EE_Fieldtype {
 		return ($name == 'channel' || $name == 'grid');
 	}
 
+	/**
+	 * Include a javascript file for this field type if it isn't included yet.
+	 */
 	protected function _include_theme_js($file) {
 		if (! in_array($file, $this->cache['includes']))
 		{
@@ -38,6 +59,9 @@ class Switch_ft extends EE_Fieldtype {
 		}
 	}
 
+	/**
+	 * Include a css file for this field type if it isn't included yet.
+	 */
 	protected function _include_theme_css($file) {
 		if (! in_array($file, $this->cache['includes']))
 		{
@@ -47,7 +71,7 @@ class Switch_ft extends EE_Fieldtype {
 	}
 
 	/**
-	 * Theme URL
+	 * Determine the base theme URL for the field type.
 	 */
 	protected function _theme_url()
 	{
@@ -60,99 +84,172 @@ class Switch_ft extends EE_Fieldtype {
 		return $this->cache['theme_url'];
 	}
 
-	function _get_setting($data, $setting, $default) {
-		if (isset($data[$setting])) {
-			return $data[$setting];
-		}
-		return $default;
-	}
-
+	/**
+	 * Create the settings form for the Control Panel.
+	 */
 	function display_settings($data)
 	{
-		$colors = array(
-			'blue' => 'Blue',
-			'green' => 'Green',
-			'yellow' => 'Yellow',
-			'red' => 'Red'
-		);
+		// Include our important files.
+		$this->_include_theme_css('css/switch.css');
+		$this->_include_theme_js('javascript/cp.js');
 
-		$leftlabel = isset($data['leftlabel']) ? $data['leftlabel'] : "ON";
-		$leftvalue = isset($data['leftvalue']) ? $data['leftvalue'] : "y";
-		$leftcolor = isset($data['leftcolor']) ? $data['leftcolor'] : "blue";
-		$rightlabel = isset($data['rightlabel']) ? $data['rightlabel'] : "OFF";
-		$rightvalue = isset($data['rightvalue']) ? $data['rightvalue'] : "n";
-		$rightcolor = isset($data['rightcolor']) ? $data['rightcolor'] : "blue";
-		$default = isset($data['default']) ? $data['default'] : 'left';
+		// Create a switch so that the user can choose how many options are in
+		// his or her Switch. Possible values are from 2 to 8.
+		$options = array();
+		for ($i = 2; $i <= Switch_ft::MAXIMUM_OPTIONS; $i++) {
+			$option = array(
+				'id' => "switch-options-$i",
+				'label' => $i,
+				'color' => 'default',
+				'value' => $i
+				);
+			$options[] = $option;
+		}
+		$options_count = isset($data['options']) ? $data['options'] : '2';
+		$this->EE->table->add_row('Options', $this->build_switch('options', $options_count, $options, array('data-switchdefoptions' => NULL)));
 
-		$this->EE->table->add_row('Left Label', form_input(array('name' => 'leftlabel', 'value' => $leftlabel)));
-		$this->EE->table->add_row('Left Value', form_input(array('name' => 'leftvalue', 'value' => $leftvalue)));
-		$this->EE->table->add_row('Left Color', form_dropdown('leftcolor', $colors, $leftcolor));
-		$this->EE->table->add_row('Right Label', form_input(array('name' => 'rightlabel', 'value' => $rightlabel)));
-		$this->EE->table->add_row('Right Value', form_input(array('name' => 'rightvalue', 'value' => $rightvalue)));
-		$this->EE->table->add_row('Right Color', form_dropdown('rightcolor', $colors, $rightcolor));
-		$this->EE->table->add_row('Default', form_dropdown('default', array('left' => 'Left', 'right' => 'Right'), $default));
+		// At the end, we'll create a Switch where the user can choose the
+		// default value for the Switch. As we go through the options, we'll
+		// want to add each option to our defaults Switch.
+		$defaults = array();
+
+		// Go through all of the possible options and output the controls
+		// relevant to that option. We always output all 8 options. The
+		// javascript that runs will hide the ones that are not in use.
+		for ($i = 1; $i <= Switch_ft::MAXIMUM_OPTIONS; $i++) {
+			$label = isset($data["label$i"]) ? $data["label$i"] : "OFF";
+			$value = isset($data["value$i"]) ? $data["value$i"] : "";
+			$color = isset($data["color$i"]) ? $data["color$i"] : "default";
+
+			// Output options for label, value, and color.
+			$this->EE->table->add_row("Label $i", form_input(array('name' => "label$i", 'value' => $label, 'data-switchdeflabel' => $i)));
+			$this->EE->table->add_row("Value $i", form_input(array('name' => "value$i", 'value' => $value, 'data-switchdefvalue' => $i)));
+			$coloroptions = $this->create_color_switch_options("option-$i-color");
+			$this->EE->table->add_row("Color $i", $this->build_switch("color$i", $color, $coloroptions, array('data-switchdefcolor' => $i)));
+
+			// Track the value in the defaults, so the user can set the
+			// default value.
+			$defaults[] = array(
+				'id' => "defaults-$i",
+				'label' => $i,
+				'color' => 'default',
+				'value' => $value
+				);
+		}
+
+		// Finally, create a Switch where the user can choose the default
+		// value for the Switch.
+		$default = isset($data['default']) ? $data['default'] : '1';
+		$this->EE->table->add_row('Default', $this->build_switch('default', $default, $defaults, array('data-switchdefdefault' => NULL)));
 	}
 
+	/**
+	 * Save all of the settings that the user choose.
+	 */
 	function save_settings($data)
 	{
-		return array(
-			'leftlabel'  => ee()->input->post('leftlabel'),
-			'leftvalue'  => ee()->input->post('leftvalue'),
-			'leftcolor'  => ee()->input->post('leftcolor'),
-			'rightlabel' => ee()->input->post('rightlabel'),
-			'rightvalue' => ee()->input->post('rightvalue'),
-			'rightcolor' => ee()->input->post('rightcolor'),
-			'default'    => ee()->input->post('default')
-		);
+		$d = array(
+			'options' => ee()->input->post('options'),
+			'default' => ee()->input->post('default')
+			);
+
+		for ($i = 1; $i <= Switch_ft::MAXIMUM_OPTIONS; $i++) {
+			$d["label$i"] = ee()->input->post("label$i");
+			$d["value$i"] = ee()->input->post("value$i");
+			$d["color$i"] = ee()->input->post("color$i");
+		}
+
+		return $d;
 	}
 
+	/**
+	 * Switch supports Grid, so we need to do the same thing as
+	 * display_settings, but for the grid.
+	 */
 	function grid_display_settings($data) {
-		$colors = array(
-			'blue' => 'Blue',
-			'green' => 'Green',
-			'yellow' => 'Yellow',
-			'red' => 'Red'
-		);
+		// Include our important files.
+		$this->_include_theme_css('css/switch.css');
+		$this->_include_theme_js('javascript/cp.js');
 
-		$leftlabel = isset($data['leftlabel']) ? $data['leftlabel'] : "ON";
-		$leftvalue = isset($data['leftvalue']) ? $data['leftvalue'] : "y";
-		$leftcolor = isset($data['leftcolor']) ? $data['leftcolor'] : "blue";
-		$rightlabel = isset($data['rightlabel']) ? $data['rightlabel'] : "OFF";
-		$rightvalue = isset($data['rightvalue']) ? $data['rightvalue'] : "n";
-		$rightcolor = isset($data['rightcolor']) ? $data['rightcolor'] : "blue";
-		$default = isset($data['default']) ? $data['default'] : 'left';
+		// grid_display_settings must return an array of settings, rather than
+		// just adding to the current table. So, this is what we're going to
+		// return.
+		$settings = array();
 
-		return array(
-			$this->grid_settings_row('Left Label', form_input(array('name' => 'leftlabel', 'value' => $leftlabel))),
-			$this->grid_settings_row('Left Value', form_input(array('name' => 'leftvalue', 'value' => $leftvalue))),
-			$this->grid_dropdown_row('Left Color', 'leftcolor', $colors, $leftcolor),
-			$this->grid_settings_row('Right Label', form_input(array('name' => 'rightlabel', 'value' => $rightlabel))),
-			$this->grid_settings_row('Right Value', form_input(array('name' => 'rightvalue', 'value' => $rightvalue))),
-			$this->grid_dropdown_row('Right Color', 'rightcolor', $colors, $rightcolor),
-			$this->grid_dropdown_row('Default', 'default', array('left' => 'Left', 'right' => 'Right'), $default)
-		);
+		// Create a switch so that the user can choose how many options are in
+		// his or her Switch. Possible values are from 2 to 8.
+		$options = array();
+		for ($i = 2; $i <= Switch_ft::MAXIMUM_OPTIONS; $i++) {
+			$option = array(
+				'id' => "switch-options-$i",
+				'label' => $i,
+				'color' => 'default',
+				'value' => $i
+				);
+			$options[] = $option;
+		}
+		$options_count = isset($data['options']) ? $data['options'] : '2';
+		$settings[] = $this->grid_settings_row('Options', $this->build_switch('options', $options_count, $options, array('data-switchdefoptions' => NULL)));
+
+		// At the end, we'll create a Switch where the user can choose the
+		// default value for the Switch. As we go through the options, we'll
+		// want to add each option to our defaults Switch.
+		$defaults = array();
+
+		// Go through all of the possible options and output the controls
+		// relevant to that option. We always output all 8 options. The
+		// javascript that runs will hide the ones that are not in use.
+		for ($i = 1; $i <= Switch_ft::MAXIMUM_OPTIONS; $i++) {
+			$label = isset($data["label$i"]) ? $data["label$i"] : "OFF";
+			$value = isset($data["value$i"]) ? $data["value$i"] : "";
+			$color = isset($data["color$i"]) ? $data["color$i"] : "default";
+
+			// Output options for label, value, and color.
+			$settings[] = $this->grid_settings_row("Label $i", form_input(array('name' => "label$i", 'value' => $label, 'data-switchdeflabel' => $i)));
+			$settings[] = $this->grid_settings_row("Value $i", form_input(array('name' => "value$i", 'value' => $value, 'data-switchdefvalue' => $i)));
+			$coloroptions = $this->create_color_switch_options("option-$i-color");
+			$settings[] = $this->grid_settings_row("Color $i", $this->build_switch("color$i", $color, $coloroptions, array('data-switchdefcolor' => $i)));
+
+			// Track the value in the defaults, so the user can set the
+			// default value.
+			$defaults[] = array(
+				'id' => "defaults-$i",
+				'label' => $i,
+				'color' => 'default',
+				'value' => $value
+				);
+		}
+
+		// Finally, create a Switch where the user can choose the default
+		// value for the Switch.
+		$default = isset($data['default']) ? $data['default'] : '1';
+		$settings[] = $this->grid_settings_row('Default', $this->build_switch('default', $default, $defaults, array('data-switchdefdefault' => NULL)));
+
+		return $settings;
 	}
 
+	/**
+	 * Save all of the settings that the user choose.
+	 */
 	function grid_save_settings($data)
 	{
+		// Hey! This is easy!
 		return $data;
 	}
 
 
 
 	/**
-	 * Display Field on Publish
-	 *
-	 * @access	public
-	 * @param	existing data
-	 * @return	field html
-	 *
+	 * Display the Switch on the Publish form.
 	 */
 	function display_field($data)
 	{
 		return $this->_display($data, $this->field_name, $this->field_name, $this->settings);
 	}
 
+	/**
+	 * Display the Switch in a grid on the Publish form.
+	 */
 	function grid_display_field($data) {
 		$fieldid = $this->settings['grid_field_id'];
 		$rowid = isset($this->settings['grid_row_id']) ? $this->settings['grid_row_id'] : 'new';
@@ -161,96 +258,131 @@ class Switch_ft extends EE_Fieldtype {
 		return $this->_display($data, $this->field_name, $id, $this->settings);
 	}
 
+	/**
+	 * Display the Switch in a matrix on the Publish form.
+	 */
 	function display_cell($data)
 	{
 		return $this->_display($data, $this->cell_name, $this->cell_name, $this->settings);
 	}
 
+	/**
+	 * Display the Switch. This is extracted out because the bulk of
+	 * displaying the Switch is common between the various sources.
+	 */
 	function _display($data, $name, $id, $settings) {
+		// Include our important files.
 		$this->_include_theme_js('javascript/switch.js');
 		$this->_include_theme_css('css/switch.css');
 
-		$leftlabel = isset($settings['leftlabel']) ? $settings['leftlabel'] : "ON";
-		$leftvalue = isset($settings['leftvalue']) ? $settings['leftvalue'] : "y";
-		$leftcolor = isset($settings['leftcolor']) ? $settings['leftcolor'] : "blue";
-		$rightlabel = isset($settings['rightlabel']) ? $settings['rightlabel'] : "OFF";
-		$rightvalue = isset($settings['rightvalue']) ? $settings['rightvalue'] : "n";
-		$rightcolor = isset($settings['rightcolor']) ? $settings['rightcolor'] : "blue";
+		// How many options do we have? The settings include all the way up to
+		// 8 options, so we need to know this to only include the ones that
+		// the user wants to show.
+		$options_count = isset($settings['options']) ? intval($settings['options']) : 2;
 
-		$leftchecked = FALSE;
-		$rightchecked = FALSE;
-		if ($data == $leftvalue) {
-			$leftchecked = TRUE;
-		}
-		if ($data == $rightvalue && $leftchecked == FALSE) {
-			$rightchecked = TRUE;
-		}
-
-		if ($leftchecked == FALSE && $rightchecked == FALSE) {
-			$leftchecked = TRUE;
-		}
-
+		// Fill up the options for the switch.
 		$options = array();
-		$options[] = array(
-			'id' => $id . '-1',
-			'label' => $leftlabel,
-			'value' => $leftvalue,
-			'checked' => $leftchecked,
-			'color' => $leftcolor
-		);
-		$options[] = array(
-			'id' => $id . '-2',
-			'label' => $rightlabel,
-			'value' => $rightvalue,
-			'checked' => $rightchecked,
-			'color' => $rightcolor
-		);
+		for ($i = 1; $i <= $options_count; $i++) {
+			$label = isset($settings["label$i"]) ? $settings["label$i"] : "OFF";
+			$value = isset($settings["value$i"]) ? $settings["value$i"] : "";
+			$color = isset($settings["color$i"]) ? $settings["color$i"] : "blue";
 
-		$ret = '<div class="switch" data-options="' . count($options) . '">';
+			$options[] = array(
+				'id' => $id . "-$i",
+				'label' => $label,
+				'value' => $value,
+				'color' => $color
+			);
+		}
 
+		// And then build build the Switch.
+		return $this->build_switch($name, $data, $options);
+	}
+
+	/**
+	 * Create the HTML for a Switch.
+	 */
+	function build_switch($name, $value, $options, $additional_attributes = NULL) {
+		// The outer <div>.
+		$ret = '<div class="switch" data-options="' . count($options) . '"';
+		// Add all of the additional attributes to the outer div.
+		if (is_array($additional_attributes)) {
+			foreach ($additional_attributes as $attrname => $attrval) {
+				$ret .= " $attrname";
+				if (!is_null($attrval)) {
+					$ret .= "=\"$attrval\"";
+				}
+			}
+		}
+		$ret .= ">";
+
+		// Used to track if we've already found the option that should be
+		// checked. We should only have one item checked, you know.
+		$checked = FALSE;
+
+		// Create all of the inner options. Each option has an input and a
+		// label.
 		$i = 0;
 		foreach ($options as $option) {
+
+			// Should this option be checked?
+			$ischecked = !$checked && $option['value'] == $value;
+			$checked = $checked || $ischecked;
+
 			$i++;
 			$ret .= "<input type=\"radio\" name=\"{$name}\" id=\"{$option['id']}\" data-position=\"{$i}\" data-color=\"{$option['color']}\" value=\"{$option['value']}\"";
-			if ($option['checked']) {
+			if ($ischecked) {
 				$ret .= " checked";
 			}
 			$ret .= ">";
 			$ret .= "<label for=\"{$option['id']}\">{$option['label']}</label>";
 		}
 
+		// Create the shuttle.
 		$ret .= '<span class="shuttle"><span></span></span>';
+
+		// And end the outer div.
 		$ret .= '</div>';
 
 		return $ret;
 	}
 
 	/**
-	 * Prep data for saving
-	 *
-	 * @access	public
-	 * @param	submitted field data
-	 * @return	string to save
+	 * Create the options for a Switch based on the default colors available,
+	 */
+	public function create_color_switch_options($id) {
+		$coloroptions = array();
+		foreach ($this->colors as $color => $colorname) {
+			$coloroptions[] = array(
+				'id' => "$id-$color",
+				'label' => $colorname,
+				'color' => $color,
+				'value' => $color);
+		}
+		return $coloroptions;
+	}
+
+	/**
+	 * Prepare data for saving. Very simple: whatever data we were given is
+	 * the data we're going to save.
 	 */
 	function save($data)
 	{
 		return $data;
 	}
 
+	/**
+	 * Prepare data for saving. Very simple: whatever data we were given is
+	 * the data we're going to save.
+	 */
 	function grid_save($data)
 	{
 		return $data;
 	}
 
 	/**
-	 * Replace tag
-	 *
-	 * @access	public
-	 * @param	field data
-	 * @param	field parameters
-	 * @param	data between tag pairs
-	 * @return	replacement text
-	 *
+	 * Replace tag. Very simple: whatever data we were given is the data we're
+	 * going to output.
 	 */
 	function replace_tag($data, $params = array(), $tagdata = FALSE)
 	{

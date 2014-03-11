@@ -2,7 +2,7 @@
 	position: relative;
 	background: white;
 	border: 1px solid #8195a0;
-	max-width: 18.75em; /* 300/16 */
+	max-width: 25em; /* 400/16 */
 	border-radius: 0.31em; /* 5/16 */
 	overflow: hidden;
 	padding: 0;
