@@ -34,5 +34,5 @@ Set "Switch" as the Field Type.
 
 # License
 
-Video Link is distributed under the MIT license. See LICENSE.md for more
+Switch is distributed under the MIT license. See LICENSE.md for more
 information.
