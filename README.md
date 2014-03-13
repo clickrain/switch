@@ -6,7 +6,7 @@ enables easy either-or switches.
 ## A note about support
 
 While we have incentive to keep this project working because we use it
-frequently, we are not always available to provide support for the Video Link
+frequently, we are not always available to provide support for the Switch
 plugin. We therefore offer it to you, free of charge, but with no guarantee of
 support. Find something that's not working? Or could be improved? By all
 means, fix it! Submit a pull request, and we'll pull it into the project so
