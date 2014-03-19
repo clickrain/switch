@@ -5,6 +5,7 @@
 	max-width: 25em; /* 400/16 */
 	border-radius: 0.31em; /* 5/16 */
 	overflow: hidden;
+	margin-top: 11px; /* EE fieldtypes need to add their own 11px top margin */
 	padding: 0;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
