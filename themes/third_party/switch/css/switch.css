@@ -17,7 +17,8 @@
 	transform: translateZ(0);
 }
 .switch input {
-	display: none;
+	position: absolute;
+	left: -9999px;
 }
 .switch label {
 	text-align: center;
@@ -83,6 +84,9 @@
 	-webkit-transition: 0.2s background-color;
 	-moz-transition: 0.2s background-color;
 	transition: 0.2s background-color;
+}
+.switch input:focus ~ .shuttle span {
+	border: 1px dotted white;
 }
 
 .switch [data-color="blue"]:checked ~ .shuttle span { background-color: #0055bd; }
