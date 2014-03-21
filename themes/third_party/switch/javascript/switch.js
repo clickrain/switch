@@ -19,6 +19,18 @@ jQuery(function($) {
 				label.attr('for', id);
 			});
 		}
+
+		switchEl.on('change', 'input', function() {
+			var evt = jQuery.Event("switchChange");
+			var input = $(this);
+
+			evt.switchPosition = input.attr('data-position');
+			evt.switchValue = input.val();
+			evt.switchText = input.next('label').text();
+			evt.switchColor = input.attr('data-color');
+
+			switchEl.trigger(evt);
+		});
 	}
 
 	$('.switch').each(function() {

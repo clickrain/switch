@@ -32,7 +32,21 @@ party themes directory. (e.g. `/themes/third_party/switch/`)
 
 Set "Switch" as the Field Type.
 
-# License
+## Events
+
+Each Switch field will trigger a custom jQuery event when the user changes the
+value.
+
+```js
+$('#hold_field_7 .switch').on('switchChange', function(e) {
+	var position = e.switchPosition; // The position of the option (1, 2, ..., 8)
+	var value = e.switchValue; // The selected option's value
+	var text = e.switchText; // The selected option's text
+	var color = e.switchColor; // The selected option's color
+});
+```
+
+## License
 
 Switch is distributed under the MIT license. See LICENSE.md for more
 information.
