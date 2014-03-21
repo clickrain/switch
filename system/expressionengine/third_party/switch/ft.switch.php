@@ -244,6 +244,10 @@ class Switch_ft extends EE_Fieldtype {
 	 */
 	function display_field($data)
 	{
+		// If this is a new entry, use the default.
+		if ($this->settings['field_data'] === false) {
+			$data = $this->settings['default'];
+		}
 		return $this->_display($data, $this->field_name, $this->field_name, $this->settings);
 	}
 
@@ -255,6 +259,12 @@ class Switch_ft extends EE_Fieldtype {
 		$rowid = isset($this->settings['grid_row_id']) ? $this->settings['grid_row_id'] : 'new';
 		$colid = $this->settings['col_id'];
 		$id = "switch_{$fieldid}_{$rowid}_{$colid}";
+
+		// If this is a new entry, use the default.
+		if ($rowid === 'new') {
+			$data = $this->settings['default'];
+		}
+
 		return $this->_display($data, $this->field_name, $id, $this->settings);
 	}
 
