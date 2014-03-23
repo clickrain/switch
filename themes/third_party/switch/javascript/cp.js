@@ -1,18 +1,12 @@
-function createUniqueIdGenerator(prefix) {
-	var i = 0;
-	return function() {
-		i++;
-		return prefix + i;
-	};
-}
-
 jQuery(function($) {
-	var genid = createUniqueIdGenerator('genid-switch-');
+	var genid = SwitchFieldType.createUniqueIdGenerator('genid-switch-');
 
 	// ExpressionEngine duplicates our element, so none of the IDs are unique.
 	// So, make them unique.
 	$('.switch').each(function() {
 		var switchEl = $(this);
+		SwitchFieldType.initialize(switchEl);
+
 		switchEl.find('input').each(function() {
 			var id = genid();
 			var input = $(this);

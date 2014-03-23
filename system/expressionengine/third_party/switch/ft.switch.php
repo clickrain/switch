@@ -91,6 +91,7 @@ class Switch_ft extends EE_Fieldtype {
 	{
 		// Include our important files.
 		$this->_include_theme_css('css/switch.css');
+		$this->_include_theme_js('javascript/common.js');
 		$this->_include_theme_js('javascript/cp.js');
 
 		// Create a switch so that the user can choose how many options are in
@@ -169,6 +170,7 @@ class Switch_ft extends EE_Fieldtype {
 	function grid_display_settings($data) {
 		// Include our important files.
 		$this->_include_theme_css('css/switch.css');
+		$this->_include_theme_js('javascript/common.js');
 		$this->_include_theme_js('javascript/cp.js');
 
 		// grid_display_settings must return an array of settings, rather than
@@ -274,8 +276,9 @@ class Switch_ft extends EE_Fieldtype {
 	 */
 	function _display($data, $name, $id, $settings) {
 		// Include our important files.
-		$this->_include_theme_js('javascript/switch.js');
 		$this->_include_theme_css('css/switch.css');
+		$this->_include_theme_js('javascript/common.js');
+		$this->_include_theme_js('javascript/switch.js');
 
 		// How many options do we have? The settings include all the way up to
 		// 8 options, so we need to know this to only include the ones that

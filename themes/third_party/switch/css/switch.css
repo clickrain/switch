@@ -55,7 +55,10 @@
 .switch input:checked + label {
 	color: white;
 }
-.switch .shuttle {
+.switch input[data-checked] + label {
+	color: white;
+}
+.switch.csstransforms .shuttle {
 	position: absolute;
 	z-index: 1;
 	top: 0;
@@ -98,59 +101,77 @@
 	border: 1px dotted white;
 }
 
-.switch [data-color="blue"]:checked ~ .shuttle span { background-color: #0055bd; }
-.switch [data-color="green"]:checked ~ .shuttle span { background-color: #28b125; }
-.switch [data-color="red"]:checked ~ .shuttle span { background-color: #aa0000; }
-.switch [data-color="yellow"]:checked ~ .shuttle span { background-color: #cccc00; }
+.switch.csstransforms [data-color="blue"]:checked ~ .shuttle span { background-color: #0055bd; }
+.switch.csstransforms [data-color="green"]:checked ~ .shuttle span { background-color: #28b125; }
+.switch.csstransforms [data-color="red"]:checked ~ .shuttle span { background-color: #aa0000; }
+.switch.csstransforms [data-color="yellow"]:checked ~ .shuttle span { background-color: #cccc00; }
 
-.switch [data-position]:checked ~ .shuttle span {
+.switch.csstransforms [data-position]:checked ~ .shuttle span {
 	display: block;
 }
-.switch [data-position="1"]:checked ~ .shuttle {
+.switch.csstransforms [data-position="1"]:checked ~ .shuttle {
 	-webkit-transform: translate(0, 0);
 	-moz-transform: translate(0, 0);
 	-ms-transform: translate(0, 0);
 	transform: translate(0, 0);
 }
-.switch [data-position="2"]:checked ~ .shuttle {
+.switch.csstransforms [data-position="2"]:checked ~ .shuttle {
 	-webkit-transform: translate(100%, 0);
 	-moz-transform: translate(100%, 0);
 	-ms-transform: translate(100%, 0);
 	transform: translate(100%, 0);
 }
-.switch [data-position="3"]:checked ~ .shuttle {
+.switch.csstransforms [data-position="3"]:checked ~ .shuttle {
 	-webkit-transform: translate(200%, 0);
 	-moz-transform: translate(200%, 0);
 	-ms-transform: translate(200%, 0);
 	transform: translate(200%, 0);
 }
-.switch [data-position="4"]:checked ~ .shuttle {
+.switch.csstransforms [data-position="4"]:checked ~ .shuttle {
 	-webkit-transform: translate(300%, 0);
 	-moz-transform: translate(300%, 0);
 	-ms-transform: translate(300%, 0);
 	transform: translate(300%, 0);
 }
-.switch [data-position="5"]:checked ~ .shuttle {
+.switch.csstransforms [data-position="5"]:checked ~ .shuttle {
 	-webkit-transform: translate(400%, 0);
 	-moz-transform: translate(400%, 0);
 	-ms-transform: translate(400%, 0);
 	transform: translate(400%, 0);
 }
-.switch [data-position="6"]:checked ~ .shuttle {
+.switch.csstransforms [data-position="6"]:checked ~ .shuttle {
 	-webkit-transform: translate(500%, 0);
 	-moz-transform: translate(500%, 0);
 	-ms-transform: translate(500%, 0);
 	transform: translate(500%, 0);
 }
-.switch [data-position="7"]:checked ~ .shuttle {
+.switch.csstransforms [data-position="7"]:checked ~ .shuttle {
 	-webkit-transform: translate(600%, 0);
 	-moz-transform: translate(600%, 0);
 	-ms-transform: translate(600%, 0);
 	transform: translate(600%, 0);
 }
-.switch [data-position="8"]:checked ~ .shuttle {
+.switch.csstransforms [data-position="8"]:checked ~ .shuttle {
 	-webkit-transform: translate(700%, 0);
 	-moz-transform: translate(700%, 0);
 	-ms-transform: translate(700%, 0);
 	transform: translate(700%, 0);
 }
+
+/**
+ * When a browser does not support CSS Transforms, then we do away with the
+ * shuttle/span thing, because it doesn't add animation. Instead, just add a
+ * background to the label that corresponds to the checked input.
+ *
+ * The browser that we're really targeting here is IE8, which also doesn't
+ * support the :checked property. So, instead of using :checked, we use [data-
+ * checked], and have a Javascript function deal with setting and unsetting
+ * that attribute.
+ */
+.switch.no-csstransforms input[data-checked] + label {
+	background-color: #6c899b;
+}
+.switch.no-csstransforms [data-color="blue"][data-checked] + label { background-color: #0055bd; }
+.switch.no-csstransforms [data-color="green"][data-checked] + label { background-color: #28b125; }
+.switch.no-csstransforms [data-color="red"][data-checked] + label { background-color: #aa0000; }
+.switch.no-csstransforms [data-color="yellow"][data-checked] + label { background-color: #cccc00; }

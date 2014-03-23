@@ -1,15 +1,9 @@
-function createUniqueIdGenerator(prefix) {
-	var i = 0;
-	return function() {
-		i++;
-		return prefix + i;
-	};
-}
-
 jQuery(function($) {
-	var genid = createUniqueIdGenerator('genid-switch-');
+	var genid = SwitchFieldType.createUniqueIdGenerator('genid-switch-');
 
 	function initializeElement(switchEl) {
+		SwitchFieldType.initialize(switchEl);
+
 		if (switchEl.find('input').eq(0).attr('id').match(/new|genid-switch-/)) {
 			switchEl.find('input').each(function() {
 				var id = genid();
@@ -19,18 +13,6 @@ jQuery(function($) {
 				label.attr('for', id);
 			});
 		}
-
-		switchEl.on('change', 'input', function() {
-			var evt = jQuery.Event("switchChange");
-			var input = $(this);
-
-			evt.switchPosition = input.attr('data-position');
-			evt.switchValue = input.val();
-			evt.switchText = input.next('label').text();
-			evt.switchColor = input.attr('data-color');
-
-			switchEl.trigger(evt);
-		});
 	}
 
 	$('.switch').each(function() {
