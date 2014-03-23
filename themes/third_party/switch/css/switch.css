@@ -5,7 +5,6 @@
 	max-width: 25em; /* 400/16 */
 	border-radius: 0.31em; /* 5/16 */
 	overflow: hidden;
-	margin-top: 11px; /* EE fieldtypes need to add their own 11px top margin */
 	padding: 0;
 	-webkit-box-sizing: border-box;
 	-moz-box-sizing: border-box;
@@ -16,6 +15,16 @@
 	-moz-transform: translateZ(0);
 	transform: translateZ(0);
 }
+
+/**
+ * EE fieldtypes need to add their own 11px top margin to the controls. But
+ * this is only needed when the field type is being used as a top level field,
+ * not as a grid field or when it is used in the Switch settings panels.
+ */
+.publish_field fieldset.holder > .switch {
+	margin-top: 11px;
+}
+
 .switch input {
 	position: absolute;
 	left: -9999px;
