@@ -85,6 +85,19 @@ jQuery(function($) {
 			settings.find('.grid_col_settings_section:nth-child(n + ' + (show + 1) + '):not(:last-child)').hide();
 		}
 
+		settings.find('.switch').each(function() {
+			var switchEl = $(this);
+			SwitchFieldType.initialize(switchEl);
+
+			switchEl.find('input').each(function() {
+				var id = genid();
+				var input = $(this);
+				var label = input.next('label');
+				input.attr('id', id);
+				label.attr('for', id);
+			});
+		});
+
 		settings.find('[name*="[options]"]').on('change', function(e) {
 			var options = $(this).val();
 			showOptions(options);
