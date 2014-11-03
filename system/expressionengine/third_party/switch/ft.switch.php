@@ -4,7 +4,7 @@ class Switch_ft extends EE_Fieldtype {
 
 	var $info = array(
 		'name'		=> 'Switch',
-		'version'	=> '1.1.0'
+		'version'	=> '1.2.0'
 	);
 
 	/**
