@@ -235,7 +235,10 @@ class Switch_ft extends EE_Fieldtype {
 	 */
 	function grid_save_settings($data)
 	{
-		// Hey! This is easy!
+		// If no default was specified, use the first value as the default.
+		if (!isset($data['default'])) {
+			$data['default'] = $data['value1'];
+		}
 		return $data;
 	}
 
@@ -264,7 +267,14 @@ class Switch_ft extends EE_Fieldtype {
 
 		// If this is a new entry, use the default.
 		if ($rowid === 'new') {
-			$data = $this->settings['default'];
+			// Well, that is, if there IS a default.
+			if (isset($this->settings['default'])) {
+				$data = $this->settings['default'];
+			}
+			// If there isn't, then use the first value.
+			else {
+				$data = $this->settings['value1'];
+			}
 		}
 
 		return $this->_display($data, $this->field_name, $id, $this->settings);
